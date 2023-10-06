@@ -3,14 +3,16 @@ from firebase_admin import credentials, initialize_app
 from utils.constants import Constants
 
 
-cred = credentials.Certificate("api/key.json")
-default_app = initialize_app(cred)
+_cred = credentials.Certificate("utils/key.json")
+_default_app = initialize_app(_cred)
 
 
 def create_app():
-    from .userApi import userApi
+    from .crud.userApi import UserApi
+    from .auth.userAuth import AuthApi
     app = Flask(__name__)
     app.config['SECRET_KEY'] = Constants.SECRET_KEY
-    app.register_blueprint(userApi, url_prefix=Constants.API_ROOT_DIR)
-    print(default_app.name)
+    app.register_blueprint(UserApi, url_prefix=Constants.API_ROOT_DIR)
+    app.register_blueprint(AuthApi, url_prefix=Constants.AUTH_ROOT_DIR)
+    print(_default_app.name)
     return app
