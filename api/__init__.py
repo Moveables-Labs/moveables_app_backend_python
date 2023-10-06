@@ -11,6 +11,6 @@ def create_app():
     from .userApi import userApi
     app = Flask(__name__)
     app.config['SECRET_KEY'] = Constants.SECRET_KEY
-    app.register_blueprint(userApi, url_prefix='/user')
+    app.register_blueprint(userApi, url_prefix=Constants.API_ROOT_DIR)
     print(default_app.name)
     return app
