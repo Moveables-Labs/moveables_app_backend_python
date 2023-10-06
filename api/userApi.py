@@ -10,7 +10,7 @@ user_Ref = db.collection(Constants.DB_COLLECTION_NAME)
 userApi = Blueprint('userApi', __name__)
 
 
-@userApi.route('/create', methods=['POST'])
+@userApi.route('/movableuser/create', methods=['POST'])
 def createUser():
     try:
         user_ref = db.collection(
@@ -23,30 +23,41 @@ def createUser():
         return jsonify({"status": False, "message": f"An Error Has Occured: {e}", "data": {}})
 
 
-@userApi.route('/update', methods=['PUT'])
-def updateUser():
+@userApi.route('/movableuser/update/userid=<string:id>', methods=['PUT'])
+def updateUser(id):
     try:
-        id = request.json["id"]
         user_Ref.document(id).set(request.json, merge=True)
-        return jsonify({"status": True, "message": "Post request was successful", "data": request.json}), 200
+        return jsonify({"status": True, "message": "Put request was successful", "data": request.json}), 200
     except Exception as e:
         return jsonify({"status": False, "message": f"An Error Has Occured: {e}", "data": {}})
 
 
-@userApi.route('/all', methods=['GET'])
+@userApi.route('/movableuser/all', methods=['GET'])
 def getAllUsers():
     try:
         all_user = [users.to_dict() for users in user_Ref.stream()]
-        return jsonify(all_user), 200
+        return jsonify({'status': True, 'message': 'Get all user successful', 'data': all_user}), 200
     except Exception as e:
-        return f'An Error of : {e}'
+        return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
 
 
-@userApi.route('/one', methods=['GET'])
-def getUser():
+@userApi.route('/movableuser/get/userid=<string:id>', methods=['GET'])
+def getUser(id):
     try:
         for user in user_Ref.stream():
-            print(UserModel(**user.to_dict()))
-            return jsonify(user.to_dict()), 200
+            userM = UserModel(**user.to_dict())
+            if (userM.id == id):
+                print(userM)
+                return jsonify(user.to_dict()), 200
+        return jsonify({"status": True, "message": "User was not found", "data": request.json}), 200
     except Exception as e:
-        return f'An Error of : {e}'
+        return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
+
+
+@userApi.route('/movableuser/delete/userid=<string:id>', methods=['DELETE'])
+def deleteUser(id):
+    try:
+        user_Ref.document(id).delete()
+        return jsonify({"status": True, "message": "User Is Deleted successfully", "data": {}}), 200
+    except Exception as e:
+        return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
