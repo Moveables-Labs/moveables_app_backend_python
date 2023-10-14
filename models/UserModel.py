@@ -4,14 +4,15 @@ from utils.enums import DeliveryMethod
 
 @dataclass
 class UserModel:
-    id: str
-    firstName: str
-    lastName: str
-    phoneNumber: str
+    password:str
     email: str
-    state: str
-    dateTime: str
-    deliveryMethod: DeliveryMethod
+    id: str = ""
+    firstName: str = ""
+    lastName: str = ""
+    phoneNumber: str = ""
+    state: str = ""
+    dateTime: str = ""
+    deliveryMethod: DeliveryMethod = DeliveryMethod.NONE.name
 
     def toDict(self):
         return asdict(self)
@@ -23,6 +24,7 @@ class UserModel:
             phoneNumber = {self.phoneNumber}, 
             state = {self.state}, 
             email = {self.email}, 
+            password = {self.password},
             delivertMethod = {self.deliveryMethod}, 
             id = {self.id}
             )"""
