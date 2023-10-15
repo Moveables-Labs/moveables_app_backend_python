@@ -41,7 +41,7 @@ def getAllUsers():
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
 
 
-# GET SPECIFICC USER BY ID FROM DATABASE
+# GET SPECIFIC USER BY ID FROM DATABASE
 @UserApi.route('/movableuser/get/userid=<string:id>', methods=['GET'])
 def getUser(id):
     try:
