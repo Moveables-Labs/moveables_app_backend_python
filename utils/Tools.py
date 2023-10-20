@@ -1,5 +1,6 @@
 from datetime import datetime
-from uuid import uuid4, uuid5
+from uuid import uuid4
+from random import randint
 
 
 class Tools:
@@ -14,3 +15,10 @@ class Tools:
         if prefixStr != None:
             return prefixStr+uuid4().hex
         return uuid4().hex
+    
+    def generateNumber(start=0, end = 9, limit = 5)->str:
+        random_numbers = ""
+        for _ in range(limit):
+           random_numbers += str(randint(start, end))
+        return random_numbers
+
