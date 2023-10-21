@@ -6,9 +6,8 @@ from ..extensions import UserRef
 
 UserApi = Blueprint('UserApi', __name__)
 
+
 # CREATE AND POST USER TO DATABASE
-
-
 @UserApi.route('/movableuser/create', methods=['POST'])
 def createUser():
     try:
@@ -49,7 +48,7 @@ def getUser(id):
             userM = UserModel(**user.to_dict())
             if (userM.id == id):
                 print(userM)
-                return jsonify({"status": True, "message": "User was not found", "data": user.to_dict()}), 200
+                return jsonify({"status": True, "message": "User was  found", "data": user.to_dict()}), 200
         return jsonify({"status": True, "message": "User was not found", "data": request.json}), 200
     except Exception as e:
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
