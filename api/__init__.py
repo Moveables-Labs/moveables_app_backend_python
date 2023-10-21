@@ -10,7 +10,9 @@ def createApp():
     from .crud.providerApi import ProviderApi
     from .auth.userAuth import AuthApi
     _App = Flask(__name__)
+        # add database
     _App.config['SECRET_KEY'] = Constants.SECRET_KEY
+    #_App.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
     _App.register_blueprint(UserApi, url_prefix=Constants.USER_API_ROOT_DIR)
     _App.register_blueprint(
         ProviderApi, url_prefix=Constants.PROVIDER_API_ROOT_DIR)
