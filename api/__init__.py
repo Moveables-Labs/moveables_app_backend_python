@@ -1,8 +1,11 @@
+import os
 from flask import Flask
 from utils.constants import Constants
 from flask_mail import Mail
 
 _App = Flask
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 
 def createApp():
     global _App
@@ -10,14 +13,13 @@ def createApp():
     from .crud.providerApi import ProviderApi
     from .auth.userAuth import AuthApi
     _App = Flask(__name__)
-        # add database
     _App.config['SECRET_KEY'] = Constants.SECRET_KEY
-    #_App.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
     _App.register_blueprint(UserApi, url_prefix=Constants.USER_API_ROOT_DIR)
     _App.register_blueprint(
         ProviderApi, url_prefix=Constants.PROVIDER_API_ROOT_DIR)
     _App.register_blueprint(AuthApi, url_prefix=Constants.AUTH_API_ROOT_DIR)
     return _App
+
 
 def emailManager():
     # init the app so it can send emails

@@ -42,13 +42,13 @@ def getAllUsers():
 
 # GET SPECIFIC USER BY ID FROM DATABASE
 @UserApi.route('/movableuser/get/userid=<string:id>', methods=['GET'])
-def getUser(id):
+def getUserById(id):
     try:
-        for user in UserRef.stream():
+        users = UserRef.where(u"id", "==", id).stream()
+        for user in users:
             userM = UserModel(**user.to_dict())
-            if (userM.id == id):
-                print(userM)
-                return jsonify({"status": True, "message": "User was  found", "data": user.to_dict()}), 200
+            print(f"User is {userM}")
+            return jsonify({"status": True, "message": "User was  found", "data": user.to_dict()}), 200
         return jsonify({"status": True, "message": "User was not found", "data": request.json}), 200
     except Exception as e:
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
@@ -60,5 +60,19 @@ def deleteUser(id):
     try:
         UserRef.document(id).delete()
         return jsonify({"status": True, "message": "User Is Deleted successfully", "data": {}}), 200
+    except Exception as e:
+        return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
+
+
+# GET SPECIFIC USER BY EMAIL FROM DATABASE
+@UserApi.route('/movableuser/get/useremail=<string:email>', methods=['GET'])
+def getUserByEmail(email):
+    try:
+        users = UserRef.where(u"email", "==", email).stream()
+        for user in users:
+            userM = UserModel(**user.to_dict(), password="")
+            print(f"User is {userM}")
+            return jsonify({"status": True, "message": "User was  found", "data": user.to_dict()}), 200
+        return jsonify({"status": True, "message": "User was not found", "data": request.json}), 200
     except Exception as e:
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})

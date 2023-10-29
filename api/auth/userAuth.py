@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
-from api.extensions import ProviderRef, auth
+from api.extensions import ProviderRef, UserRef, auth
+from models.ProviderModel import ProviderModel
 from models.UserModel import UserModel
 from utils.Tools import Tools
 from api import emailManager
@@ -16,13 +17,25 @@ def logIn(email, password):
 
 
 # SIGN UP AND CREATING ANY USER IN DATABASE
-@AuthApi.route('/signupwithdata', methods=['POST'])
-def signUpWithData():
+@AuthApi.route('/signupuser', methods=['POST'])
+def signUpUser():
     try:
-        user_model = UserModel(id=Tools.generateUUID(), **request.json)
+        print(request.json)
+        user_model = UserModel(id=Tools.generateUUID(),dateTime=Tools.getCurrentTime(), **request.json)
         auth.create_user(uid = user_model.id, email=user_model.email, password=user_model.password) # create user in authentication
-        ProviderRef.document(user_model.id).set(user_model.toDict()) # create user in firestor database
+        UserRef.document(user_model.id).set(user_model.toDict()) # create user in firestor database
         return jsonify({"status": True, "message": f"User with email {user_model.email} created", "data": user_model.toDict()})
+    except Exception as e:
+        return jsonify({"status": False, "message": f"An Error Has Occured: {e}", "data": {}})# SIGN UP AND CREATING ANY USER IN DATABASE
+    
+@AuthApi.route('/signupprovider', methods=['POST'])
+def signUpProvider():
+    try:
+        print(request.json)
+        provider_model = ProviderModel(id=Tools.generateUUID(),dateTime=Tools.getCurrentTime(), **request.json)
+        auth.create_user(uid = provider_model.id, email=provider_model.email, password=provider_model.password) # create user in authentication
+        ProviderRef.document(provider_model.id).set(provider_model.toDict()) # create user in firestor database
+        return jsonify({"status": True, "message": f"User with email {provider_model.email} created", "data": provider_model.toDict()})
     except Exception as e:
         return jsonify({"status": False, "message": f"An Error Has Occured: {e}", "data": {}})
 
@@ -46,7 +59,7 @@ def sendVerificationEmail(reciveremail):
         message = Message("Message Header", sender="noreply@demo.com", recipients= [reciveremail])
         message.body = f"Your verification code is : {code}" 
         mail.send(message)
-        return jsonify({"status": True, "message": "Email sent successfully", "data": {"reciveremail" : reciveremail, "code" : code}}), 200
+        return jsonify({"status": True, "message": "Email sent successfully", "data": {"receiveremail" : reciveremail, "code" : code}}), 200
     except BadHeaderError:
         return jsonify({"status": False, "message": "Invalid header in email", "data": {}})
     except Exception as e:

@@ -3,5 +3,6 @@ class Constants:
     USER_API_ROOT_DIR = "/user"
     PROVIDER_API_ROOT_DIR = "/provider"
     USERS_DB_COLLECTION_NAME = "MoveableUsers"
-    PROVIDER_DB_COLLECTION_NAME = "ProviderMoveableUsers"
+    PROVIDER_DB_COLLECTION_NAME = "MoveableProvider"
     AUTH_API_ROOT_DIR = '/auth'
+    PORT = 5000

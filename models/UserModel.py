@@ -1,18 +1,29 @@
 from dataclasses import asdict, dataclass
+from models.CommunicationDataModel import CommunicationDataModel
+from models.FareCostModel import FareCostModel
+from models.LocationModel import LocationModel
+from models.OrderDelivery import DeliveryModel, OrderModel
+from models.PaymentInfoModel import PaymentInfoModel
 from utils.enums import DeliveryMethod
 
 
 @dataclass
 class UserModel:
-    password:str
+    password: str
     email: str
-    id: str = ""
-    firstName: str = ""
-    lastName: str = ""
-    phoneNumber: str = ""
-    state: str = ""
-    dateTime: str = ""
-    deliveryMethod: DeliveryMethod = DeliveryMethod.NONE.name
+    id: str = None
+    firstName: str = None
+    lastName: str = None
+    phoneNumber: str = None
+    state: str = None
+    dateTime: str = None
+    address: str = None
+    defaultLocation: LocationModel = LocationModel()
+    fareCost: FareCostModel = FareCostModel()
+    paymentInfo: PaymentInfoModel = PaymentInfoModel()
+    communicationData: CommunicationDataModel = CommunicationDataModel()
+    order: OrderModel = OrderModel()
+    deliveryModel: DeliveryModel = DeliveryModel()
 
     def toDict(self):
         return asdict(self)
@@ -25,6 +36,5 @@ class UserModel:
             state = {self.state}, 
             email = {self.email}, 
             password = {self.password},
-            delivertMethod = {self.deliveryMethod}, 
             id = {self.id}
             )"""
