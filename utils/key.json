@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "moveables-logistics",
+  "private_key_id": "178e1c37d7b3dfb2239091351d236dcd8ed8c436",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC1SGzjutF5ACtL\n5jIDo+ZI7cQt7n8BcIhlMeRE+CznX0vjAEGQqwNJB2TUvHFMsNVmeQCwQ7Fxds6Y\npXRJZLvB4A8+0rsf2x7EbspqlFnvolMaSeTGYvBo3JtdgxSFOSWnptqvniy9gwru\nMUuJDJFyWJx/vZvzroDO7lKmGlrxwXmiTbA4SJbjdmeAU7WlJokLqlCfU/OxTHVL\nAhHI+EpF3GtodiMzSX/vzr5Mw8+i/64jg/wzYZ3qmPXbwP9+w4JNMF4jZnL1XkDT\nQZzEV96teBfxQTWMczJ/FwUAxO6MbonAtUGToGJeSVSb1WkfMNgQ8RhKV3bV4Jy6\nO9/5aJL/AgMBAAECggEAGjPWZAbevCnwGCUKWZ2ubXV12QW99HaliwBDyaGYK/aJ\nliK1V18V4c+1x/dXkQmGRCzSkqergDD3T6JVRT560l0RFw2H3+TgykJmnjJvMBnl\nqnO/zi+tfBqsQj9DZLY2i8hW7PIPRB0qzp7wF2ZqUigeBsC18pTofVXT5bpYJtUy\ndXOqtmDvO76M5TBTMb/C1FgcToI5W1NN2geCCyob1lTipUTzngqY+7Y5KkYTA5Uh\n/7kiVr+fsiQCJFxccxqioUc2J2U7QlEAPq+kEa/WmXAkKBTRT/7H98DOAvPSUZHO\nqex8Xw3AIv/M+em7mpQvzlhBMgKF2Z5t4TyBixUcwQKBgQDok9x+aDAfAYDS1t1/\n7FpXbQKpwbsKHRteCp3ipUm1hW6f7MFfs/s4eBVqlHeemfhaIT4Xljetl8UxTWwM\n8j68vG0AZW5TxLaKfUr4f5hb5e481JnW1+ZlJmkPw8Ov78Sgw4/Sj4EZcl7waG+u\nmhchAMs7px8XfHvh8QADaADi8QKBgQDHih+ur4yBs5JvbarO88twg2yX5R0tUOY8\nRqR3Rz4u+y4USORJMNZHJyyqIgEijx+SboqEY77Vzys2pWXOp+3H0eXiM+xpSYLe\n750GIrwm6eBdgtrAiEMmkaVHvloDySTHLb4LqoolY+ipl0ySfw1vbqBHtDe1qeKA\nBkOfrrf07wKBgEhhnAGLE07S/PChBhZFzGfg+S8zp64iGN5Pl4ttvV7Mw/zphdTv\nAoQ0exXMVt35NR13swdMLM/NqAUL/1CYI4ZBbfrtlkRjuBupmqdzrksLZ/VuhOIk\nFwPrzE6nskMS77LIqf3xw0/UFE/lcLx6IDCZOqa6ACcjCrrqcgKdX4lBAoGAXs++\nph47wRU2K0QMuTEWJWwNGU+AQZwDCfj3BMYRQfmPt4u7DRvrdPukOWLW7zjaY5Wq\ns6VBdA5wFhMZAMzCKwQNGyJY3t5TFOL91YCDrmnKdiRLFNiqL5Vc124XD11v4ERX\n3Os3oPSMBKkjdShxldUWy3tSTTtfqD1RvHokZnkCgYEAw1haDd2Xaf00IBr/9YJk\nFRieUtdwfAvSIFi4MpLk2eu1K9uCqPP2XaCB/iPctTR5cEnw+6qfzj7h8/d/iLF+\nxsYQiVoSs45qDUKz0IDnoZDCOjbwUidc7nxxzehmaHckr96TAKyCNnz2mglpybt+\nsqg7x0bMTqiyNf0co//gvDs=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-jjs32@moveables-logistics.iam.gserviceaccount.com",
+  "client_id": "104848727046944062415",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-jjs32%40moveables-logistics.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
