@@ -1,9 +1,10 @@
 from dataclasses import asdict, dataclass
 
+
 @dataclass
 class LocationModel:
-    pickUpLocation: str   = None
-    dropOffLocation: str  = None
+    pickUpLocation: str = None
+    dropOffLocation: str = None
     lastKnowLocation: str = None
 
     def toDict(self):

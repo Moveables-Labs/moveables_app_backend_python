@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
-from models.UserModel import UserModel
-from utils.Tools import Tools
-from ..extensions import UserRef
 
+from dbmodel.ApiDatabaseModel import ApiDatabaseModel
+from models.UserModel import UserModel
+from ..extensions import UserRef
 
 UserApi = Blueprint('UserApi', __name__)
 
@@ -11,13 +11,12 @@ UserApi = Blueprint('UserApi', __name__)
 @UserApi.route('/movableuser/create', methods=['POST'])
 def createUser():
     try:
-        user_ref = UserRef.document()
-        userModel = UserModel(
-            id=user_ref.id, dateTime=Tools.getCurrentTime(), **request.json)
-        user_ref.set(userModel.toDict())
-        return jsonify({"status": True, "message": "Post request was successful", "data": userModel}), 200
+        user_model = ApiDatabaseModel.addToDatabase(
+            UserModel().toDict()
+        )
+        return jsonify({"status": True, "message": "Post request was successful", "data": user_model}), 200
     except Exception as e:
-        return jsonify({"status": False, "message": f"An Error Has Occured: {e}", "data": {}})
+        return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
 
 
 # UPDATE USER TOT DATABASE
@@ -27,17 +26,20 @@ def updateUser(id):
         UserRef.document(id).set(request.json, merge=True)
         return jsonify({"status": True, "message": "Put request was successful", "data": request.json}), 200
     except Exception as e:
-        return jsonify({"status": False, "message": f"An Error Has Occured: {e}", "data": {}})
+        return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
 
 
 # GET ALL THE USERS TO DATABASE
 @UserApi.route('/movableuser/all', methods=['GET'])
 def getAllUsers():
     try:
-        all_user = [users.to_dict() for users in UserRef.stream()]
+        # all_user = [users.to_dict() for users in UserRef.stream()]
+        all_user = ApiDatabaseModel.getAllFromDatabase()
+        print("*******************")
+        print(all_user)
         return jsonify({'status': True, 'message': 'Successfully retrieved all users', 'data': all_user}), 200
     except Exception as e:
-        return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
+        return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}}), 401
 
 
 # GET SPECIFIC USER BY ID FROM DATABASE

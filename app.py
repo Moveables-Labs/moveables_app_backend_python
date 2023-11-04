@@ -1,6 +1,5 @@
-from api import createApp
+from api.extensions import createApp
 from utils.constants import Constants
-
 
 app = createApp()
 
@@ -10,6 +9,5 @@ def hello_world():
     return "<p>Hello, World!</p>"
 
 
-
-#if __name__ == '__main__':
-#    #app.run(debug=True,port=Constants.PORT)
+if __name__ == '__main__':
+    app.run(debug=True, port=Constants.PORT)
