@@ -89,12 +89,12 @@ class MovableUser(_Base):
         self.state = user_model.state
         self.userId = user_model.userId
         self.address = user_model.address
-        self.defaultLocation = user_model.defaultLocation.toDict()
-        self.fareCost = user_model.fareCost.toDict()
-        self.paymentInfo = user_model.paymentInfo.toDict()
-        self.communicationData = user_model.communicationData.toDict()
-        self.order = user_model.order.toDict()
-        self.deliveryModel = user_model.deliveryModel.toDict()
+        self.defaultLocation = user_model.defaultLocation.toDict().__str__()
+        self.fareCost = user_model.fareCost.toDict().__str__()
+        self.paymentInfo = user_model.paymentInfo.toDict().__str__()
+        self.communicationData = user_model.communicationData.toDict().__str__()
+        self.order = user_model.order.toDict().__str__()
+        self.deliveryModel = user_model.deliveryModel.toDict().__str__()
 
     def __repr__(self):
         return f"MovableUser(id={self.id}, email={self.email}, password={self.password}, "
@@ -103,17 +103,35 @@ class MovableUser(_Base):
 class MovableProvider(_Base):
     __tablename__ = "MovableProvider"
     id = Column(Integer, primary_key=True)
+    state = Column(String)
     email = Column(String)
     isAuth = Column(Boolean)
     isLogIn = Column(Boolean)
-    password = Column(String)
     dateTime = Column(DateTime(timezone=True), server_default=func.now())
+    password = Column(String)
+    providerId = Column(String)
+    companyName = Column(String)
+    phoneNumber = Column(String)
+    deliveryModel = Column(String)
+    deliveryMethod = Column(String)
+    companyAddress = Column(String)
+    defaultLocation = Column(String)
+    communicationData = Column(String)
 
     def __init__(self, provider_model: ProviderModel):
+        self.state = provider_model.state
         self.email = provider_model.email
         self.isAuth = provider_model.isAuth
         self.isLogIn = provider_model.isLogIn
         self.password = provider_model.password
+        self.providerId = provider_model.providerId
+        self.companyName = provider_model.companyName
+        self.phoneNumber = provider_model.phoneNumber
+        self.deliveryModel = provider_model.deliveryModel.toDict().__str__()
+        self.deliveryMethod = provider_model.deliveryMethod.__str__()
+        self.companyAddress = provider_model.companyAddress
+        self.defaultLocation = provider_model.defaultLocation.toDict().__str__()
+        self.communicationData = provider_model.communicationData.toDict().__str__()
 
     def __repr__(self):
         return f"MovableProvider(id={self.id}, email={self.email}, password={self.password}, "
@@ -125,7 +143,8 @@ _Session = sessionmaker(bind=_engine)
 _session = _Session()
 
 
-class ApiDatabaseModel:
+class DatabaseManager:
+    # ******* MovableUser method call for interacting with database ***********
     @staticmethod
     def addToUserDatabase(user_model: UserModel):
         try:
@@ -136,9 +155,9 @@ class ApiDatabaseModel:
             return {"message": f"{e}", "successCode": 0}
 
     @staticmethod
-    def updateUserDatabase(user_model: UserModel):
+    def updateUserDatabase(userId: str, values: dict):
         try:
-            _session.add(MovableUser(user_model))
+            _session.query(MovableUser).filter_by(userId=userId).update(values)  # .add(MovableUser(user_model))
             _session.commit()
             return {"message": "Success", "successCode": 1}
         except Exception as e:
@@ -164,7 +183,6 @@ class ApiDatabaseModel:
                     results.append(result.__dict__)
                 else:
                     results.append(result.__dict__)
-            print(results)
             return results
         except Exception as e:
             return [{'error': f"{e}"}]
@@ -173,7 +191,65 @@ class ApiDatabaseModel:
     def getByIdFromUserDatabase(userId: str):
         try:
             result = _session.execute(select(MovableUser).filter_by(userId=userId)).first()
-            print(result)
+            return result
+        except Exception as e:
+            return {'error': f"{e}"}
+
+    @staticmethod
+    def getByEmailFromUserDatabase(email: str):
+        try:
+            result = _session.execute(select(MovableUser).filter_by(email=email)).first()
+            return result
+        except Exception as e:
+            return {'error': f"{e}"}
+
+    # ******* MovableProvider method call for interacting with database ***********
+    @staticmethod
+    def addToProviderDatabase(provider_model: ProviderModel):
+        try:
+            _session.add(MovableProvider(provider_model))
+            _session.commit()
+            return {"message": "Success", "successCode": 1}
+        except Exception as e:
+            return {"message": f"{e}", "successCode": 0}
+
+    @staticmethod
+    def updateProviderDatabase(provider_model: str, values:dict):
+        try:
+            _session.query(MovableProvider).filter_by(providerId=provider_model).update(values)
+            _session.commit()
+            return {"message": "Success", "successCode": 1}
+        except Exception as e:
+            return {"message": f"{e}", "successCode": 0}
+
+    @staticmethod
+    def deleteFromProviderDatabase(provider_model: ProviderModel):
+        try:
+            _session.delete(MovableProvider(provider_model))
+            _session.commit()
+            return {"message": "Success", "successCode": 1}
+        except Exception as e:
+            return {"message": f"{e}", "successCode": 0}
+
+    @staticmethod
+    def getAllFromProviderDatabase():
+        results: list = []
+        try:
+            for result in _session.query(MovableProvider).all():
+                # Remove the item with key "b"
+                if "_sa_instance_state" in result.__dict__:
+                    del result.__dict__["_sa_instance_state"]
+                    results.append(result.__dict__)
+                else:
+                    results.append(result.__dict__)
+            return results
+        except Exception as e:
+            return [{'error': f"{e}"}]
+
+    @staticmethod
+    def getByIdFromProviderDatabase(providerId: str):
+        try:
+            result = _session.execute(select(MovableProvider).filter_by(providerId=providerId)).first()
             return result
         except Exception as e:
             return [{'error': f"{e}"}]

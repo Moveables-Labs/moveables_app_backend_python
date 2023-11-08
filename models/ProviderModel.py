@@ -16,7 +16,6 @@ class ProviderModel:
     companyName: str = None
     phoneNumber: str = None
     state: str = None
-    dateTime: str = None
     companyAddress: str = None
     defaultLocation: LocationModel = LocationModel()
     communicationData: CommunicationDataModel = CommunicationDataModel()
