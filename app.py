@@ -1,8 +1,14 @@
-from api import createApp
+from datetime import datetime, time
+from api import createApp, getSocket
+from flask import render_template
+import googlemaps
+import json
+
 #from flask_sqlalchemy import SQLAlchemy
 
 
 app = createApp()
+socketIO = getSocket()
     # add database
 #app.app_context().push()
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////C:\\Developer\\Website\\moveables_app_backend_python2\\moveables_app_backend_python\\test.db'
@@ -17,6 +23,30 @@ app = createApp()
 #    def __repr__(self):
 #        return f"User(id = {self.id}, password = {self.password}, email = {self.email}"
 
+@app.route('/maps')
+def index():
+    return render_template('loc.html')
+
+@socketIO.on('data')
+def handle_data(data):
+    pickup = data["pickup"]
+    dropoff = data["dropoff"]
+    dispatch = data["dispatch"]
+
+    gmaps = googlemaps.Client(key="AIzaSyDON3DiK7aYG444F6W9OhNxC4Z6Uy5REXU")
+
+    # get directions with google maps
+    directions_pickup = gmaps.directions(dispatch, pickup)
+    directions_dropoff = gmaps.directions(dispatch, dropoff)
+    
+    # save directions to files
+    with open("pickup.json", 'w') as p:
+        json.dump(directions_pickup, p)
+
+    with open("dropoff.json", 'w') as d:
+        json.dump(directions_dropoff, d)
+
+    socketIO.emit("message", "generated directions file")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketIO.run(app, debug=True)

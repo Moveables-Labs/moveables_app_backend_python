@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Tutorial on Flask: A Web socket example</title>
+        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <form id="form">
+            <label for="dispatch">Dispatch Rider's Location: </label>
+            <input type="text" id="dispatch" autofocus>
+
+            <label for="pickup">PickUp Address: </label>
+            <input type="text" id="pickup" autofocus>
+
+
+            <label for="dropoff">DropOff Address: </label>
+            <input type="text" id="dropoff" autofocus>
+
+            <button type="submit"> submit </button>
+        </form>
+        <div id="log"/>
+    </body>
+
+    <script type="text/javascript" charset="utf-8">
+        var socket = io();
+        socket.on('connect', function() {
+            socket.emit('init', {data: 'I\'m connected!'});
+        });
+
+        socket.on('message', function(data){
+            document.getElementById('log').innerHTML += `<span style="color: blue">${JSON.stringify(data)}</span><br>`;
+        })
+
+        document.getElementById('form').onsubmit = ev => {
+            ev.preventDefault();
+
+            const dispatch = document.getElementById('dispatch');
+            const pickup = document.getElementById('pickup');
+            const dropoff = document.getElementById('dropoff');
+
+
+            socket.emit("data", { dispatch: dispatch.value, pickup : pickup.value, dropoff: dropoff.value });
+
+            dispatch.value = '';
+            pickup.value = '';
+            dropoff.value = '';
+        };
+
+    </script>
+</html>
