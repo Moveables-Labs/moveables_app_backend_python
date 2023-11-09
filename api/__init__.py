@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_socketio import SocketIO
 from utils.constants import Constants
 from flask_mail import Mail
 
@@ -9,7 +10,7 @@ def createApp():
     from .crud.userApi import UserApi
     from .crud.providerApi import ProviderApi
     from .auth.userAuth import AuthApi
-    _App = Flask(__name__)
+    _App = Flask(__name__, template_folder="../templates")
         # add database
     _App.config['SECRET_KEY'] = Constants.SECRET_KEY
     #_App.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -28,3 +29,8 @@ def emailManager():
     _App.config['MAIL_USE_TLS'] = False
     _App.config['MAIL_USE_SSL'] = True
     return Mail(_App)
+
+def getSocket():
+    socketIO = SocketIO(_App, cors_allowed_origins='*')
+    return socketIO
+
