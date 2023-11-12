@@ -1,16 +1,26 @@
 from dataclasses import asdict, dataclass
+
+from models.CommunicationDataModel import CommunicationDataModel
+from models.LocationModel import LocationModel
+from models.OrderDelivery import DeliveryModel
 from utils.enums import DeliveryMethod
 
 
 @dataclass
 class ProviderModel:
-    password:str
-    email: str
-    id: str = ""
-    companyName: str = ""
-    phoneNumber: str = ""
-    state: str = ""
-    dateTime: str = ""
+    providerId: str = None
+    password: str = None
+    email: str = None
+    isLogIn: bool = False
+    isAuth: bool = False
+    companyName: str = None
+    phoneNumber: str = None
+    state: str = None
+    companyAddress: str = None
+    defaultLocation: LocationModel = LocationModel()
+    communicationData: CommunicationDataModel = CommunicationDataModel()
+    deliveryMethod: DeliveryMethod = DeliveryMethod.NONE
+    deliveryModel: DeliveryModel = DeliveryModel()
 
     def toDict(self):
         return asdict(self)
