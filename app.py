@@ -11,4 +11,4 @@ def hello_world():
 
 if __name__ == '__main__':
     # app.run(debug=True, port=Constants.PORT)
-    app.run(debug=False, port='0.0.0.0')
+    app.run(debug=False, host='0.0.0.0')
