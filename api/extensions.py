@@ -1,16 +1,16 @@
-from firebase_admin import firestore
+# from firebase_admin import firestore
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 
 from utils.constants import Constants
-from firebase_admin import credentials, initialize_app, auth
+# from firebase_admin import credentials, initialize_app, auth
 
-Cred = credentials.Certificate("utils/key.json")
-Initialize = initialize_app(Cred)
-DataBase = firestore.client()
-UserRef = DataBase.collection(Constants.USERS_DB_COLLECTION_NAME)
-ProviderRef = DataBase.collection(Constants.PROVIDER_DB_COLLECTION_NAME)
-Auth = auth
+# Cred = credentials.Certificate("utils/key.json")
+# Initialize = initialize_app(Cred)
+# DataBase = firestore.client()
+# UserRef = DataBase.collection(Constants.USERS_DB_COLLECTION_NAME)
+# ProviderRef = DataBase.collection(Constants.PROVIDER_DB_COLLECTION_NAME)
+# Auth = auth
 
 
 def createApp():
