@@ -24,7 +24,6 @@ def createUser():
 def updateUser(userId):
     try:
         DatabaseManager.updateUserDatabase(userId, request.json)
-        # UserRef.document(userId).set(request.json, merge=True)
         return jsonify({"status": True, "message": "Put request was successful", "data": request.json}), 200
     except Exception as e:
         return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
@@ -36,8 +35,6 @@ def getAllUsers():
     try:
         # all_user = [users.to_dict() for users in UserRef.stream()]
         all_user = DatabaseManager.getAllFromUserDatabase()
-        print("*******************")
-        print(all_user)
         return jsonify({'status': True, 'message': 'Successfully retrieved all users', 'data': all_user}), 200
     except Exception as e:
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}}), 401

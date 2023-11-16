@@ -19,7 +19,7 @@ class ProviderModel:
     companyAddress: str = None
     defaultLocation: LocationModel = LocationModel()
     communicationData: CommunicationDataModel = CommunicationDataModel()
-    deliveryMethod: DeliveryMethod = DeliveryMethod.NONE
+    deliveryMethod: DeliveryMethod = DeliveryMethod.NONE.name
     deliveryModel: DeliveryModel = DeliveryModel()
 
     def toDict(self):

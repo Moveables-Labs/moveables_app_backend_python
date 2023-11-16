@@ -47,6 +47,8 @@
 #             return results
 #         except Exception as e:
 #             return [{'error': f"{e}"}]
+import json
+
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, func, Boolean, select
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -89,12 +91,12 @@ class MovableUser(_Base):
         self.state = user_model.state
         self.userId = user_model.userId
         self.address = user_model.address
-        self.defaultLocation = user_model.defaultLocation.toDict().__str__()
-        self.fareCost = user_model.fareCost.toDict().__str__()
-        self.paymentInfo = user_model.paymentInfo.toDict().__str__()
-        self.communicationData = user_model.communicationData.toDict().__str__()
-        self.order = user_model.order.toDict().__str__()
-        self.deliveryModel = user_model.deliveryModel.toDict().__str__()
+        self.defaultLocation = json.dumps(user_model.defaultLocation.toDict())
+        self.fareCost = json.dumps(user_model.fareCost.toDict())
+        self.paymentInfo = json.dumps(user_model.paymentInfo.toDict())
+        self.communicationData = json.dumps(user_model.communicationData.toDict())
+        self.order = json.dumps(user_model.order.toDict())
+        self.deliveryModel = json.dumps(user_model.deliveryModel.toDict())
 
     def __repr__(self):
         return f"MovableUser(id={self.id}, email={self.email}, password={self.password}, "
@@ -127,11 +129,12 @@ class MovableProvider(_Base):
         self.providerId = provider_model.providerId
         self.companyName = provider_model.companyName
         self.phoneNumber = provider_model.phoneNumber
-        self.deliveryModel = provider_model.deliveryModel.toDict().__str__()
+        self.deliveryModel = json.dumps(
+            provider_model.deliveryModel.toDict())  # provider_model.deliveryModel.toDict().__str__()
         self.deliveryMethod = provider_model.deliveryMethod.__str__()
         self.companyAddress = provider_model.companyAddress
-        self.defaultLocation = provider_model.defaultLocation.toDict().__str__()
-        self.communicationData = provider_model.communicationData.toDict().__str__()
+        self.defaultLocation = json.dumps(provider_model.defaultLocation.toDict())
+        self.communicationData = json.dumps(provider_model.communicationData.toDict())
 
     def __repr__(self):
         return f"MovableProvider(id={self.id}, email={self.email}, password={self.password}, "
@@ -164,10 +167,9 @@ class DatabaseManager:
             return {"message": f"{e}", "successCode": 0}
 
     @staticmethod
-    def deleteFromUserDatabase(user_model: UserModel):
+    def deleteFromUserDatabase(user_model: str):
         try:
-            _session.delete(MovableUser(user_model))
-            _session.commit()
+            _session.query(MovableUser).filter_by(userId=user_model).delete()
             return {"message": "Success", "successCode": 1}
         except Exception as e:
             return {"message": f"{e}", "successCode": 0}
@@ -176,7 +178,15 @@ class DatabaseManager:
     def getAllFromUserDatabase():
         results: list = []
         try:
-            for result in _session.query(MovableUser).all():
+            for value in _session.query(MovableUser).all():
+                result = value
+                for k, v in result.__dict__.items():
+                    try:
+                        result.__dict__[k] = json.loads(v)
+                    except Exception as e:
+                        print(f"ERR Key {k} Value {v}")
+                        print(f"ERROR {e}")
+
                 # Remove the item with key "b"
                 if "_sa_instance_state" in result.__dict__:
                     del result.__dict__["_sa_instance_state"]
@@ -190,7 +200,17 @@ class DatabaseManager:
     @staticmethod
     def getByIdFromUserDatabase(userId: str):
         try:
-            result = _session.execute(select(MovableUser).filter_by(userId=userId)).first()
+            value = _session.query(MovableUser).filter_by(userId=userId).first().__dict__
+            result = value
+            for k, v in value.items():
+                try:
+                    result[k] = json.loads(v)
+                except Exception as e:
+                    print(f"ERR Key {k} Value {v}")
+                    print(f"ERROR {e}")
+            # Remove the item with key "b"
+            if "_sa_instance_state" in result:
+                del result["_sa_instance_state"]
             return result
         except Exception as e:
             return {'error': f"{e}"}
@@ -198,7 +218,17 @@ class DatabaseManager:
     @staticmethod
     def getByEmailFromUserDatabase(email: str):
         try:
-            result = _session.execute(select(MovableUser).filter_by(email=email)).first()
+            value = _session.query(MovableUser).filter_by(email=email).first().__dict__
+            result = value
+            for k, v in value.items():
+                try:
+                    result[k] = json.loads(v)
+                except Exception as e:
+                    print(f"ERR Key {k} Value {v}")
+                    print(f"ERROR {e}")
+            # Remove the item with key "b"
+            if "_sa_instance_state" in result:
+                del result["_sa_instance_state"]
             return result
         except Exception as e:
             return {'error': f"{e}"}
@@ -214,7 +244,7 @@ class DatabaseManager:
             return {"message": f"{e}", "successCode": 0}
 
     @staticmethod
-    def updateProviderDatabase(provider_model: str, values:dict):
+    def updateProviderDatabase(provider_model: str, values: dict):
         try:
             _session.query(MovableProvider).filter_by(providerId=provider_model).update(values)
             _session.commit()
@@ -223,10 +253,9 @@ class DatabaseManager:
             return {"message": f"{e}", "successCode": 0}
 
     @staticmethod
-    def deleteFromProviderDatabase(provider_model: ProviderModel):
+    def deleteFromProviderDatabase(provider_model: str):
         try:
-            _session.delete(MovableProvider(provider_model))
-            _session.commit()
+            _session.query(MovableUser).filter_by(providerId=provider_model).delete()
             return {"message": "Success", "successCode": 1}
         except Exception as e:
             return {"message": f"{e}", "successCode": 0}
@@ -235,7 +264,15 @@ class DatabaseManager:
     def getAllFromProviderDatabase():
         results: list = []
         try:
-            for result in _session.query(MovableProvider).all():
+            for value in _session.query(MovableProvider).all():
+                result = value
+                for k, v in result.__dict__.items():
+                    try:
+                        result.__dict__[k] = json.loads(v)
+                    except Exception as e:
+                        print(f"ERR Key {k} Value {v}")
+                        print(f"ERROR {e}")
+
                 # Remove the item with key "b"
                 if "_sa_instance_state" in result.__dict__:
                     del result.__dict__["_sa_instance_state"]
@@ -249,7 +286,35 @@ class DatabaseManager:
     @staticmethod
     def getByIdFromProviderDatabase(providerId: str):
         try:
-            result = _session.execute(select(MovableProvider).filter_by(providerId=providerId)).first()
+            value = _session.query(MovableProvider).filter_by(providerId=providerId).first().__dict__
+            result = value
+            for k, v in value.items():
+                try:
+                    result[k] = json.loads(v)
+                except Exception as e:
+                    print(f"ERR Key {k} Value {v}")
+                    print(f"ERROR {e}")
+            # Remove the item with key "b"
+            if "_sa_instance_state" in result:
+                del result["_sa_instance_state"]
+            return result
+        except Exception as e:
+            return [{'error': f"{e}"}]
+
+    @staticmethod
+    def getByEmailFromProviderDatabase(email: str):
+        try:
+            value = _session.query(MovableProvider).filter_by(email=email).first().__dict__
+            result = value
+            for k, v in value.items():
+                try:
+                    result[k] = json.loads(v)
+                except Exception as e:
+                    print(f"ERR Key {k} Value {v}")
+                    print(f"ERROR {e}")
+            # Remove the item with key "b"
+            if "_sa_instance_state" in result:
+                del result["_sa_instance_state"]
             return result
         except Exception as e:
             return [{'error': f"{e}"}]

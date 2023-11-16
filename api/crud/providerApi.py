@@ -38,7 +38,8 @@ def updateProvider(providerId):
 def getAllProviders():
     try:
         all_provider = DatabaseManager.getAllFromProviderDatabase()
-        return jsonify({'status': True, 'message': 'Successfully retrieved all provider users', 'data': all_provider}), 200
+        return jsonify(
+            {'status': True, 'message': 'Successfully retrieved all provider users', 'data': all_provider}), 200
     except Exception as e:
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
 
@@ -50,9 +51,23 @@ def getProviderById(providerId):
         # for provider in ProviderRef.stream():
         #     providerModel = ProviderModel(**provider.to_dict())
         #     if (providerModel.id == id):
-                #return jsonify(), 200
+        # return jsonify(), 200
         provider = DatabaseManager.getByIdFromProviderDatabase(providerId)
-        return jsonify({"status": True, "message": "Provider was found", "data": provider.toDict()})
+        return jsonify({"status": True, "message": "Provider was found", "data": provider})
+        # return jsonify({"status": True, "message": "Provider was not found", "data": request.json})
+    except Exception as e:
+        return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
+
+
+@ProviderApi.route('/providermovableuser/get/email=<string:email>', methods=['GET'])
+def getProviderByEmail(email):
+    try:
+        # for provider in ProviderRef.stream():
+        #     providerModel = ProviderModel(**provider.to_dict())
+        #     if (providerModel.id == id):
+        # return jsonify(), 200
+        provider = DatabaseManager.getByEmailFromProviderDatabase(email)
+        return jsonify({"status": True, "message": "Provider was found", "data": provider})
         # return jsonify({"status": True, "message": "Provider was not found", "data": request.json})
     except Exception as e:
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
@@ -66,6 +81,7 @@ def deleteProvider(providerId):
         result = DatabaseManager.deleteFromProviderDatabase(providerId)
         pos_message = "Provider Is Deleted successfully"
         neg_message = "Deleting Provider was not successful"
-        return jsonify({"status": True, "message": pos_message if result["successCode"] else neg_message, "data": {}}), 200
+        return jsonify(
+            {"status": True, "message": pos_message if result["successCode"] else neg_message, "data": {}}), 200
     except Exception as e:
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
