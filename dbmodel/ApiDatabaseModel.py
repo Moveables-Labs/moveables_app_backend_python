@@ -49,7 +49,7 @@
 #             return [{'error': f"{e}"}]
 import json
 
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, func, Boolean, select
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, func, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
