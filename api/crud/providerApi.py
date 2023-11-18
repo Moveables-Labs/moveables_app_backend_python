@@ -8,7 +8,7 @@ ProviderApi = Blueprint('ProviderApi', __name__)
 
 
 # CREATE AND POST  PROVIDER TO DATABASE
-@ProviderApi.route('/providermovableuser/create', methods=['POST'])
+@ProviderApi.route('/movablesprovider/create', methods=['POST'])
 def createProvider():
     try:
         provider_model = DatabaseManager.addToProviderDatabase(
@@ -24,7 +24,7 @@ def createProvider():
 
 
 # UPDATE PROVIDER TO DATABASE
-@ProviderApi.route('/providermovableuser/update/providerid=<string:providerId>', methods=['PUT'])
+@ProviderApi.route('/movablesprovider/update/providerid=<string:providerId>', methods=['PUT'])
 def updateProvider(providerId):
     try:
         DatabaseManager.updateProviderDatabase(providerId, request.json)
@@ -34,7 +34,7 @@ def updateProvider(providerId):
 
 
 # GET ALL THE PROVIDERS TO DATABASE
-@ProviderApi.route('/providermovableuser/all', methods=['GET'])
+@ProviderApi.route('/movablesprovider/all', methods=['GET'])
 def getAllProviders():
     try:
         all_provider = DatabaseManager.getAllFromProviderDatabase()
@@ -45,7 +45,7 @@ def getAllProviders():
 
 
 # GET SPECIFIC PROVIDER BY ID FROM DATABASE
-@ProviderApi.route('/providermovableuser/get/providerid=<string:providerId>', methods=['GET'])
+@ProviderApi.route('/movablesprovider/get/providerid=<string:providerId>', methods=['GET'])
 def getProviderById(providerId):
     try:
         # for provider in ProviderRef.stream():
@@ -59,7 +59,7 @@ def getProviderById(providerId):
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}})
 
 
-@ProviderApi.route('/providermovableuser/get/email=<string:email>', methods=['GET'])
+@ProviderApi.route('/movablesprovider/get/email=<string:email>', methods=['GET'])
 def getProviderByEmail(email):
     try:
         # for provider in ProviderRef.stream():
@@ -74,7 +74,7 @@ def getProviderByEmail(email):
 
 
 # DELETE OR REMOVE SPECIFIC PROVIDER FROM DATABASE
-@ProviderApi.route('/providermovableuser/delete/providerid=<string:providerId>', methods=['DELETE'])
+@ProviderApi.route('/movablesprovider/delete/providerid=<string:providerId>', methods=['DELETE'])
 def deleteProvider(providerId):
     try:
         # ProviderRef.document(id).delete()

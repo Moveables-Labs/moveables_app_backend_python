@@ -167,6 +167,24 @@ class DatabaseManager:
             return {"message": f"{e}", "successCode": 0}
 
     @staticmethod
+    def logInUser(result):
+        print(F"RESULT : {result}")
+        user = DatabaseManager.getByEmailFromUserDatabase(result["email"])
+        if user["password"] == result["password"]:
+            DatabaseManager.updateUserDatabase(user["userId"], {"email": "mail@me.com"})
+            return "Success"
+        raise Exception(f"User with email {result['email']} and password {result['password']} was not found")
+
+    @staticmethod
+    def logOutUser(result):
+        print(F"RESULT : {result}")
+        user = DatabaseManager.getByEmailFromUserDatabase(result["email"])
+        if user["password"] == result["password"]:
+            DatabaseManager.updateUserDatabase(user["userId"], {"isLogIn": False})
+            return "Success"
+        raise Exception(f"User with email {result['email']} and password {result['email']} was not found")
+
+    @staticmethod
     def deleteFromUserDatabase(user_model: str):
         try:
             _session.query(MovableUser).filter_by(userId=user_model).delete()
@@ -234,6 +252,24 @@ class DatabaseManager:
             return {'error': f"{e}"}
 
     # ******* MovableProvider method call for interacting with database ***********
+    @staticmethod
+    def logInProvider(result):
+        print(F"RESULT : {result}")
+        provider = DatabaseManager.getByEmailFromProviderDatabase(result["email"])
+        if provider["password"] == result["password"]:
+            DatabaseManager.updateProviderDatabase(provider["providerId"], {"isLogIn": True})
+            return "Success"
+        raise Exception(f"Provider with email {result['email']} and password {result['email']} was not found")
+
+    @staticmethod
+    def logOutProvider(result):
+        print(F"RESULT : {result}")
+        provider = DatabaseManager.getByEmailFromProviderDatabase(result["email"])
+        if provider["password"] == result["password"]:
+            DatabaseManager.updateProviderDatabase(provider["providerId"], {"isLogIn": False})
+            return "Success"
+        raise Exception(f"Provider with email {result['email']} and password {result['email']} was not found")
+
     @staticmethod
     def addToProviderDatabase(provider_model: ProviderModel):
         try:
@@ -317,4 +353,4 @@ class DatabaseManager:
                 del result["_sa_instance_state"]
             return result
         except Exception as e:
-            return [{'error': f"{e}"}]
+            return {'error': f"{e}"}
