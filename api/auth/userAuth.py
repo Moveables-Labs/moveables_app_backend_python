@@ -10,9 +10,40 @@ from utils.Tools import Tools
 AuthApi = Blueprint('AuthApi', __name__)
 
 
-@AuthApi.route('/login/email=<string:email>/password=<string:password>')
-def logIn(email, password):
-    return f"Your Email : {email} Password : {password}, message : Not Implemented"
+@AuthApi.route('/loginuser', methods=['PUT'])
+def logInUser():
+    try:
+        DatabaseManager.logInUser(request.json)
+        return jsonify({"status": True, "message": "Login request was successful", "data": request.json}), 200
+    except Exception as e:
+        return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
+
+
+@AuthApi.route('/logoutuser', methods=['PUT'])
+def logOutUser():
+    try:
+        DatabaseManager.logOutUser(request.json)
+        return jsonify({"status": True, "message": "Logout request was successful", "data": request.json}), 200
+    except Exception as e:
+        return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
+
+
+@AuthApi.route('/loginprovider', methods=['PUT'])
+def logInProvider():
+    try:
+        DatabaseManager.logInProvider(request.json)
+        return jsonify({"status": True, "message": "Login request was successful", "data": request.json}), 200
+    except Exception as e:
+        return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
+
+
+@AuthApi.route('/logoutprovider', methods=['PUT'])
+def logOutProvider():
+    try:
+        DatabaseManager.logOutProvider(request.json)
+        return jsonify({"status": True, "message": "Logout request was successful", "data": request.json}), 200
+    except Exception as e:
+        return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
 
 
 # SIGN UP AND CREATING ANY USER IN DATABASE
@@ -37,11 +68,13 @@ def signUpUser():
 def signUpProvider():
     try:
         provider_model = ProviderModel(providerId=Tools.generateUUID(), isAuth=True, **request.json)
+        result = DatabaseManager.addToProviderDatabase(provider_model)  # create user in database
+
         # Auth.create_user(uid=provider_model.id, email=provider_model.email,
         #                  password=provider_model.password)  # create user in authentication
         # ProviderRef.document(provider_model.id).set(provider_model.toDict())  # create user in firestore database
         return jsonify({"status": True, "message": f"User with email {provider_model.email} created",
-                        "data": provider_model.toDict()})
+                        "data": result})
     except Exception as e:
         return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
 

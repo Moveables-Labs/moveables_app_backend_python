@@ -8,7 +8,7 @@ UserApi = Blueprint('UserApi', __name__)
 
 
 # CREATE AND POST USER TO DATABASE
-@UserApi.route('/movableuser/create', methods=['POST'])
+@UserApi.route('/movablesuser/create', methods=['POST'])
 def createUser():
     try:
         user_model = DatabaseManager.addToUserDatabase(
@@ -20,31 +20,28 @@ def createUser():
 
 
 # UPDATE USER TOT DATABASE
-@UserApi.route('/movableuser/update/userid=<string:userId>', methods=['PUT'])
+@UserApi.route('/movablesuser/update/userid=<string:userId>', methods=['PUT'])
 def updateUser(userId):
     try:
         DatabaseManager.updateUserDatabase(userId, request.json)
-        # UserRef.document(userId).set(request.json, merge=True)
         return jsonify({"status": True, "message": "Put request was successful", "data": request.json}), 200
     except Exception as e:
         return jsonify({"status": False, "message": f"An Error Has Occurred: {e}", "data": {}})
 
 
 # GET ALL THE USERS TO DATABASE
-@UserApi.route('/movableuser/all', methods=['GET'])
+@UserApi.route('/movablesuser/all', methods=['GET'])
 def getAllUsers():
     try:
         # all_user = [users.to_dict() for users in UserRef.stream()]
         all_user = DatabaseManager.getAllFromUserDatabase()
-        print("*******************")
-        print(all_user)
         return jsonify({'status': True, 'message': 'Successfully retrieved all users', 'data': all_user}), 200
     except Exception as e:
         return jsonify({'status': False, 'message': f'An Error of : {e}', 'data': {}}), 401
 
 
 # GET SPECIFIC USER BY ID FROM DATABASE
-@UserApi.route('/movableuser/get/userid=<string:userId>', methods=['GET'])
+@UserApi.route('/movablesuser/get/userid=<string:userId>', methods=['GET'])
 def getUserById(userId):
     try:
         user = DatabaseManager.getByIdFromUserDatabase(userId)
@@ -60,7 +57,7 @@ def getUserById(userId):
 
 
 # DELETE OR REMOVE SPECIFIC USER FROM DATABASE
-@UserApi.route('/movableuser/delete/userid=<string:userId>', methods=['DELETE'])
+@UserApi.route('/movablesuser/delete/userid=<string:userId>', methods=['DELETE'])
 def deleteUser(userId):
     try:
         result = DatabaseManager.deleteFromUserDatabase(userId)
@@ -74,7 +71,7 @@ def deleteUser(userId):
 
 
 # GET SPECIFIC USER BY EMAIL FROM DATABASE
-@UserApi.route('/movableuser/get/useremail=<string:email>', methods=['GET'])
+@UserApi.route('/movablesuser/get/useremail=<string:email>', methods=['GET'])
 def getUserByEmail(email):
     try:
         user = DatabaseManager.getByEmailFromUserDatabase(email)
