@@ -49,6 +49,7 @@
 #             return [{'error': f"{e}"}]
 import json
 
+import flask
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, func, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -151,16 +152,25 @@ class DatabaseManager:
     @staticmethod
     def addToUserDatabase(user_model: UserModel):
         try:
-            _session.add(MovableUser(user_model))
-            _session.commit()
-            return {"message": "Success", "successCode": 1}
+            user = DatabaseManager.getByEmailFromUserDatabase(email=user_model.email)
+            if user is None:
+                _session.add(MovableUser(user_model))
+                _session.commit()
+                return flask.jsonify(
+                    {"status": True, "message": f"User with email {user_model.email} created",
+                     "data": user_model.toDict()})
+            return flask.jsonify(
+                {"status": False, "message": f"User with email {user_model.email} already exist",
+                 "data": {}})
         except Exception as e:
-            return {"message": f"{e}", "successCode": 0}
+            return flask.jsonify({"status": False, "message": f"An Error Has Occurred: {e}",
+                                  "data": {}})  # SIGN UP AND CREATING ANY USER IN DATABASE
 
     @staticmethod
     def updateUserDatabase(userId: str, values: dict):
         try:
-            _session.query(MovableUser).filter_by(userId=userId).update(values)  # .add(MovableUser(user_model))
+            _session.query(MovableUser).filter_by(userId=userId).update(
+                values)  # .add(MovableUser(user_model))
             _session.commit()
             return {"message": "Success", "successCode": 1}
         except Exception as e:
@@ -168,21 +178,39 @@ class DatabaseManager:
 
     @staticmethod
     def logInUser(result):
-        print(F"RESULT : {result}")
-        user = DatabaseManager.getByEmailFromUserDatabase(result["email"])
-        if user["password"] == result["password"]:
-            DatabaseManager.updateUserDatabase(user["userId"], {"email": "mail@me.com"})
-            return "Success"
-        raise Exception(f"User with email {result['email']} and password {result['password']} was not found")
+        try:
+            user = DatabaseManager.getByEmailFromUserDatabase(result["email"])
+            if user["password"] == result["password"] and user["email"].lower() == result[
+                "email"].lower():
+                DatabaseManager.updateUserDatabase(user["userId"], {"isLogIn": True})
+                return flask.jsonify(
+                    {"status": True, "message": "Login request was successful", "data": result})
+            else:
+                flask.jsonify(
+                    {"status": True,
+                     "message": f"User with email {result['email']} and password {result['email']} was not found",
+                     "data": {}})
+        except Exception as e:
+            return flask.jsonify(
+                {"status": True, "message": f"There was an error {e}", "data": {}})
 
     @staticmethod
     def logOutUser(result):
-        print(F"RESULT : {result}")
-        user = DatabaseManager.getByEmailFromUserDatabase(result["email"])
-        if user["password"] == result["password"]:
-            DatabaseManager.updateUserDatabase(user["userId"], {"isLogIn": False})
-            return "Success"
-        raise Exception(f"User with email {result['email']} and password {result['email']} was not found")
+        try:
+            user = DatabaseManager.getByEmailFromUserDatabase(result["email"])
+            if user["password"] == result["password"] and user["email"].lower() == result[
+                "email"].lower():
+                DatabaseManager.updateUserDatabase(user["userId"], {"isLogIn": False})
+                return flask.jsonify(
+                    {"status": True, "message": "Logout request was successful", "data": result})
+            else:
+                flask.jsonify(
+                    {"status": True,
+                     "message": f"User with email {result['email']} and password {result['email']} was not found",
+                     "data": {}})
+        except Exception as e:
+            return flask.jsonify(
+                {"status": True, "message": f"There was an error {e}", "data": {}})
 
     @staticmethod
     def deleteFromUserDatabase(user_model: str):
@@ -254,30 +282,58 @@ class DatabaseManager:
     # ******* MovableProvider method call for interacting with database ***********
     @staticmethod
     def logInProvider(result):
-        print(F"RESULT : {result}")
-        provider = DatabaseManager.getByEmailFromProviderDatabase(result["email"])
-        if provider["password"] == result["password"]:
-            DatabaseManager.updateProviderDatabase(provider["providerId"], {"isLogIn": True})
-            return "Success"
-        raise Exception(f"Provider with email {result['email']} and password {result['email']} was not found")
+        try:
+            provider = DatabaseManager.getByEmailFromProviderDatabase(result["email"])
+            if provider["password"] == result["password"] and provider["email"].lower() == result[
+                "email"].lower():
+                DatabaseManager.updateProviderDatabase(provider["providerId"], {"isLogIn": True})
+                return flask.jsonify(
+                    {"status": True, "message": "Login request was successful", "data": result})
+            else:
+                flask.jsonify(
+                    {"status": True,
+                     "message": f"Provider with email {result['email']} and password {result['email']} was not found",
+                     "data": {}})
+        except Exception as e:
+            return flask.jsonify(
+                {"status": True, "message": f"There was an error {e}", "data": {}})
 
     @staticmethod
     def logOutProvider(result):
-        print(F"RESULT : {result}")
-        provider = DatabaseManager.getByEmailFromProviderDatabase(result["email"])
-        if provider["password"] == result["password"]:
-            DatabaseManager.updateProviderDatabase(provider["providerId"], {"isLogIn": False})
-            return "Success"
-        raise Exception(f"Provider with email {result['email']} and password {result['email']} was not found")
+        try:
+            provider = DatabaseManager.getByEmailFromProviderDatabase(result["email"])
+            if provider["password"] == result["password"] and provider["email"].lower() == result[
+                "email"].lower():
+                DatabaseManager.updateProviderDatabase(provider["providerId"], {"isLogIn": False})
+                return flask.jsonify(
+                    {"status": True, "message": "Logout request was successful", "data": result})
+            else:
+                flask.jsonify(
+                    {"status": True,
+                     "message": f"Provider with email {result['email']} and password {result['email']} was not found",
+                     "data": {}})
+        except Exception as e:
+            return flask.jsonify(
+                {"status": True, "message": f"There was an error {e}", "data": {}})
 
     @staticmethod
     def addToProviderDatabase(provider_model: ProviderModel):
         try:
-            _session.add(MovableProvider(provider_model))
-            _session.commit()
-            return {"message": "Success", "successCode": 1}
+            provider = DatabaseManager.getByEmailFromProviderDatabase(email=provider_model.email)
+            if provider is None:
+                _session.add(MovableProvider(provider_model))
+                _session.commit()
+                return flask.jsonify(
+                    {"status": True,
+                     "message": f"Provider with email {provider_model.email} created",
+                     "data": provider_model.toDict()})
+            return flask.jsonify(
+                {"status": False,
+                 "message": f"Provider with email {provider_model.email} already exist",
+                 "data": {}})
         except Exception as e:
-            return {"message": f"{e}", "successCode": 0}
+            return flask.jsonify({"status": False, "message": f"An Error Has Occurred: {e}",
+                                  "data": {}})  # SIGN UP AND CREATING ANY USER IN DATABASE
 
     @staticmethod
     def updateProviderDatabase(provider_model: str, values: dict):
@@ -322,7 +378,8 @@ class DatabaseManager:
     @staticmethod
     def getByIdFromProviderDatabase(providerId: str):
         try:
-            value = _session.query(MovableProvider).filter_by(providerId=providerId).first().__dict__
+            value = _session.query(MovableProvider).filter_by(
+                providerId=providerId).first().__dict__
             result = value
             for k, v in value.items():
                 try:

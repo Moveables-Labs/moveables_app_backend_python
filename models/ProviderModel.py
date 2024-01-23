@@ -9,10 +9,10 @@ from utils.enums import DeliveryMethod
 @dataclass
 class ProviderModel:
     providerId: str = None
+    isAuth: bool = False
+    isLogIn: bool = False
     password: str = None
     email: str = None
-    isLogIn: bool = False
-    isAuth: bool = False
     companyName: str = None
     phoneNumber: str = None
     state: str = None
@@ -31,6 +31,5 @@ class ProviderModel:
             phoneNumber = {self.phoneNumber}, 
             state = {self.state}, 
             email = {self.email}, 
-            password = {self.password},
-            id = {self.id}
-            )"""
+            password = {self.password}
+        )"""
