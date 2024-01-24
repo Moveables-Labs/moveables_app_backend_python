@@ -70,16 +70,20 @@ def signUpProvider():
 
 
 # SEND VERIFICATION CODE TO USERS TO VERIFY EMAIL
-@AuthApi.route('/verify_email/receiver_email=<string:receiver_email>', methods=['GET'])
-def sendVerificationEmail(receiver_email):
+@AuthApi.route('/verify_email', methods=['put'])
+def sendVerificationEmail():
     try:
+        data = request.get_json()
         code = Tools.generateNumber()  # generate a 5 digit code for user to verify email
         mail = emailManager()  # init the email manager
-        message = Message("Message Header", sender="noreply@demo.com", recipients=[receiver_email])
+        message = Message(
+            "Message Header",
+            sender="noreply@demo.com",
+            recipients=[data.get("receiveremail")])
         message.body = f"Your verification code is : {code}"
         mail.send(message)
         return jsonify({"status": True, "message": "Email sent successfully",
-                        "data": {"receiver_email": receiver_email, "code": code}}), 200
+                        "data": {"receiver_email": data.get("receiveremail"), "code": code}}), 200
     except BadHeaderError:
         return jsonify({"status": False, "message": "Invalid header in email", "data": {}})
     except Exception as e:
