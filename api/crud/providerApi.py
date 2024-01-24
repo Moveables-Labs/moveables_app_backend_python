@@ -14,10 +14,6 @@ def createProvider():
         provider_model = DatabaseManager.addToProviderDatabase(
             ProviderModel(**request.json, providerId=Tools.generateUUID())
         )
-        # providerRef = ProviderRef.document()
-        # providerModel = ProviderModel(
-        #     id=ProviderRef.id, dateTime=Tools.getCurrentTime(), **request.json)
-        # providerRef.set(providerModel.toDict())
         return jsonify({"status": True, "message": "Post request was successful", "data": provider_model}), 200
     except Exception as e:
         return jsonify({"status": False, "message": f"An Error Has Occured: {e}", "data": {}})
