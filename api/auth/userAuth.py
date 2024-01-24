@@ -71,6 +71,7 @@ def signUpProvider():
 
 # SEND VERIFICATION CODE TO USERS TO VERIFY EMAIL
 @AuthApi.route('/verify_email', methods=['put'])
+
 def sendVerificationEmail():
     try:
         data = request.get_json()
