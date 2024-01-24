@@ -1,5 +1,4 @@
 from api.extensions import createApp
-from utils.constants import Constants
 
 app = createApp()
 
@@ -11,4 +10,6 @@ def hello_world():
 
 if __name__ == '__main__':
     # app.run(debug=True, port=Constants.PORT)
-    app.run(debug=False, host='0.0.0.0')
+    # app.run(debug=False, host='0.0.0.0')
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=8080)
