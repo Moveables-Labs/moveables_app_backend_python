@@ -1,23 +1,14 @@
-from flask import Flask, request, jsonify, make_response
-from flask_restful import Resource, Api
-# interact with db
-from flask_sqlalchemy import SQLAlchemy
+from api.extensions import createApp
+from utils.constants import Constants
 
-app = Flask(__name__)
+app = createApp()
 
 
-
-@app.route('/', methods=['GET'])
-def index():
-    return jsonify({"greetings" : "Hello world"})
-
-
-
-
-
-
-
+@app.route("/")
+def hello_world():
+    return "<p>Hello, World!</p>"
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True, port=Constants.PORT)
+    app.run(debug=False, host='0.0.0.0')
